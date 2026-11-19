@@ -9,6 +9,9 @@
   <script src="{{ url_for('static', filename='app.js') }}" defer></script>
 </head>
 <body>
+  <div class="christmas-banner">
+    🎄 Christmas bouquets now available — order early for Christmas
+  </div>
   <header>
     <div class="wrap nav">
       <a class="logo" href="/">Dill Flowers</a>
@@ -19,12 +22,20 @@
   <main>
     <section class="wrap hero">
       <div>
-        <p class="eyebrow">Fresh flowers, simply arranged</p>
-        <h1>Beautiful flowers for everyday moments.</h1>
-        <p class="intro">Hand-tied bouquets made with fresh seasonal flowers. Order online for collection or local delivery.</p>
+        <p class="eyebrow">Christmas at Dill Flowers</p>
+
+        <h1>Beautiful flowers for the festive season.</h1>
+
+        <p class="intro">
+          Hand-tied bouquets made with fresh seasonal flowers.
+          Order for Christmas, collection or local delivery.
+        </p>
+
         <a class="button" href="#flowers">Shop flowers</a>
       </div>
-      <div class="hero-flower">Dill Flowers</div>
+      <div class="hero-flower">
+        <img src="{{ url_for('static', filename='imgs/logo.png') }}" loading="lazy">
+      </div>
     </section>
 
     <section id="flowers" class="flowers">
@@ -85,7 +96,19 @@
 
     <section id="contact" class="contact"><div class="wrap contact-inner">
       <div><h2>Come and say hello</h2><p>Visit the shop or get in touch about an order.</p></div>
-      <div><p>Your shop address</p><p>01234 567890</p><p>dillflowers.com</p></div>
+      <a
+        class="button review-button"
+        href="https://search.google.com/local/writereview?placeid=ChIJTQV8RQGviUgRZUdY1A9JCvg"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Leave a review
+      </a>
+      <div>
+        <p>130 W Blackhall St, Greenock PA15 1XR, UK</p>
+        <p><a class="contact-link" href="tel:+441475910316">01475 910316</a></p>
+        <p>dillflowers.com</p>
+      </div>
     </div></section>
   </main>
 

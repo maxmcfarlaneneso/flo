@@ -44,3 +44,87 @@ label { display: grid; gap: 7px; color: #536158; font-size: 13px; } input, selec
 .gallery-item:hover img { transform: scale(1.015); opacity: .94; }
 @media (max-width: 900px) { .gallery-grid { columns: 2; } }
 @media (max-width: 550px) { .gallery-grid { columns: 1; } }
+/* Christmas */
+
+.christmas-banner {
+  padding: 10px 20px;
+  background: #8f2831;
+  color: #fffaf2;
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+.christmas-banner + header {
+  top: 0;
+}
+
+.hero {
+  position: relative;
+}
+
+.hero::before {
+  content: "✦";
+  position: absolute;
+  top: 45px;
+  left: -20px;
+  color: #a88749;
+  font-size: 22px;
+}
+
+.hero::after {
+  content: "✦";
+  position: absolute;
+  right: 48%;
+  bottom: 55px;
+  color: #a88749;
+  font-size: 14px;
+}
+
+.hero-flower {
+  background: #e5e8df;
+  border: 1px solid #d8d7c9;
+}
+
+.button {
+  background: #31533d;
+}
+
+.button:hover {
+  background: #203c2b;
+}
+
+.review-button {
+  background: #8f2831;
+}
+
+.review-button:hover {
+  background: #732029;
+}
+
+.contact-link {
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.contact-link:hover {
+  border-bottom-color: white;
+}
+
+.product-card {
+  box-shadow: 0 3px 14px rgba(39, 60, 46, 0.06);
+}
+
+@media (max-width: 760px) {
+  .christmas-banner {
+    font-size: 13px;
+    padding: 9px 15px;
+  }
+
+  .hero::before,
+  .hero::after {
+    display: none;
+  }
+}
