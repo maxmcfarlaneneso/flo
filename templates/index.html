@@ -138,7 +138,8 @@
           <label>Name<input name="name" required placeholder="Christmas bouquet"></label>
           <label>Price (£)<input name="price" required min="0" step="0.01" type="number" placeholder="35.00"></label>
           <label>Category<select name="category"><option>Christmas</option><option>Weddings</option><option>Funerals</option><option>Birthdays</option><option>Other</option></select></label>
-          <label>Image<select name="image" id="image-select"><option value="">Choose randomly</option></select></label>
+          <label>Existing image<select name="image" id="image-select"><option value="">Choose randomly</option></select></label>
+          <label>Or upload a new image<input id="new-bouquet-image" type="file" accept="image/png,image/jpeg,image/webp"><span class="field-help">PNG, JPG or WebP, up to 10 MB.</span></label>
           <label class="wide-field">Shopify URL <span class="optional">optional</span><input name="shopify_url" type="url" placeholder="Leave blank if not using Shopify"></label>
         </div>
         <label class="switch-row"><input name="in_stock" type="checkbox" checked> In stock</label>

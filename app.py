@@ -6,6 +6,7 @@ from pathlib import Path
 from datetime import timedelta
 
 from flask import Flask, abort, jsonify, render_template, request, session
+from werkzeug.utils import secure_filename
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = Path(os.environ.get("DILL_DATA_DIR", BASE_DIR / "data"))
@@ -19,6 +20,7 @@ ADMIN_KEY = os.environ.get("DILL_ADMIN_KEY", "change-me")
 app = Flask(__name__)
 app.secret_key = os.environ.get("DILL_SECRET_KEY", "change-this-secret-key")
 app.permanent_session_lifetime = timedelta(minutes=10)
+app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024
 
 
 def get_db():
@@ -123,6 +125,31 @@ def admin_status():
 def list_images():
     require_admin()
     return jsonify(available_images())
+
+
+@app.post("/api/images/upload")
+def upload_image():
+    require_admin()
+    uploaded = request.files.get("image")
+    if not uploaded or not uploaded.filename:
+        return jsonify(error="Choose an image to upload"), 400
+
+    filename = secure_filename(uploaded.filename)
+    suffix = Path(filename).suffix.lower()
+    if suffix not in {".png", ".jpg", ".jpeg", ".webp"}:
+        return jsonify(error="Use a PNG, JPG, JPEG or WebP image"), 400
+
+    stem = Path(filename).stem or "bouquet"
+    candidate = f"{stem}{suffix}"
+    counter = 2
+    while (IMAGE_DIR / candidate).exists():
+        candidate = f"{stem}-{counter}{suffix}"
+        counter += 1
+
+    uploaded.save(IMAGE_DIR / candidate)
+    return jsonify(filename=candidate), 201
+
+
 
 
 @app.post("/api/bouquets")

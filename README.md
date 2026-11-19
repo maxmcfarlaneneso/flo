@@ -106,3 +106,8 @@ Click `Owner` beside the bouquet section, enter `DILL_ADMIN_KEY`, then you can:
 ## Editing from the storefront
 
 While the owner session is active, public bouquet cards show an **Edit** button instead of the customer purchase action. Clicking it opens Owner controls and scrolls directly to that bouquet's editor. The admin header stays sticky so Close and Log out remain accessible while scrolling. Shopify URLs are optional; when blank, the public card simply has no View button.
+
+
+## Owner image uploads
+
+When adding a bouquet, the owner can upload a PNG, JPG/JPEG or WebP image directly from the modal. Uploads require an authenticated owner session, are limited to 10 MB, are saved into `static/imgs`, and are automatically given a collision-safe filename. The newly uploaded file is immediately assigned to the new bouquet and also becomes part of the public gallery. On PythonAnywhere, make sure `static/imgs` is writable by the web app user.

@@ -89,6 +89,30 @@ $('#close-admin')?.addEventListener('click',()=>adminModal?.close());
 $('#admin-login-button')?.addEventListener('click',loginAdmin);
 keyInput?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();loginAdmin()}});
 $('#admin-logout-button')?.addEventListener('click',async()=>{try{await fetch('/api/admin/logout',{method:'POST',credentials:'same-origin'})}finally{showLoggedOut();setMessage('Logged out.')}});
-$('#add-bouquet-form')?.addEventListener('submit',async event=>{event.preventDefault();const form=new FormData(event.currentTarget),data=Object.fromEntries(form.entries());data.in_stock=form.get('in_stock')==='on';try{await apiRequest('/api/bouquets',{method:'POST',body:JSON.stringify(data)});location.reload()}catch(error){setMessage(error.message,true)}});
+async function uploadNewBouquetImage() {
+  const input = $('#new-bouquet-image');
+  if (!input?.files?.length) return '';
+  const body = new FormData();
+  body.append('image', input.files[0]);
+  const response = await fetch('/api/images/upload', {method:'POST', credentials:'same-origin', body});
+  if (!response.ok) {
+    let detail = response.status === 401 ? 'Owner session expired. Please log in again.' : `Upload failed (${response.status})`;
+    try { detail = (await response.json()).error || detail; } catch (_) {}
+    if (response.status === 401) showLoggedOut();
+    throw new Error(detail);
+  }
+  return (await response.json()).filename;
+}
+$('#add-bouquet-form')?.addEventListener('submit',async event=>{
+  event.preventDefault();
+  const form=new FormData(event.currentTarget),data=Object.fromEntries(form.entries());
+  data.in_stock=form.get('in_stock')==='on';
+  try {
+    const uploadedFilename = await uploadNewBouquetImage();
+    if (uploadedFilename) data.image = uploadedFilename;
+    await apiRequest('/api/bouquets',{method:'POST',body:JSON.stringify(data)});
+    location.reload();
+  } catch(error) { setMessage(error.message,true); }
+});
 $$('.edit-bouquet-form').forEach(element=>element.addEventListener('submit',async event=>{event.preventDefault();const form=new FormData(element),data=Object.fromEntries(form.entries());data.in_stock=form.get('in_stock')==='on';try{await apiRequest(`/api/bouquets/${element.dataset.id}`,{method:'PATCH',body:JSON.stringify(data)});setMessage(`Saved ${data.name}. Refresh to see category-row changes.`)}catch(error){setMessage(error.message,true)}}));
 $$('.delete-button').forEach(button=>button.addEventListener('click',async event=>{const row=event.target.closest('.edit-bouquet-form'),name=row?.querySelector('[name="name"]')?.value||'this bouquet';if(!row||!confirm(`Remove ${name}?`))return;try{await apiRequest(`/api/bouquets/${row.dataset.id}`,{method:'DELETE'});row.remove();setMessage(`Removed ${name}.`)}catch(error){setMessage(error.message,true)}}));
