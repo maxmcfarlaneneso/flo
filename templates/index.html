@@ -80,7 +80,9 @@
                 {% if not bouquet['in_stock'] %}<span class="stock-badge">Out of stock</span>{% endif %}
               </div>
               <div class="product-text"><div><h3>{{ bouquet['name'] }}</h3><p>£{{ '%.2f'|format(bouquet['price_pence'] / 100) }}</p></div>
-                {% if bouquet['in_stock'] %}<a href="{{ bouquet['shopify_url'] }}">View</a>{% else %}<span class="disabled-button">Unavailable</span>{% endif %}
+                {% if session.get('admin_authenticated') %}<button class="card-edit-button" type="button" data-edit-bouquet="{{ bouquet['id'] }}">Edit</button>
+                {% elif bouquet['in_stock'] and bouquet['shopify_url'] and bouquet['shopify_url'] != '#' %}<a href="{{ bouquet['shopify_url'] }}">View</a>
+                {% elif not bouquet['in_stock'] %}<span class="disabled-button">Unavailable</span>{% endif %}
               </div>
             </article>
             {% endfor %}
@@ -137,7 +139,7 @@
           <label>Price (£)<input name="price" required min="0" step="0.01" type="number" placeholder="35.00"></label>
           <label>Category<select name="category"><option>Christmas</option><option>Weddings</option><option>Funerals</option><option>Birthdays</option><option>Other</option></select></label>
           <label>Image<select name="image" id="image-select"><option value="">Choose randomly</option></select></label>
-          <label class="wide-field">Shopify URL<input name="shopify_url" type="url" placeholder="https://..."></label>
+          <label class="wide-field">Shopify URL <span class="optional">optional</span><input name="shopify_url" type="url" placeholder="Leave blank if not using Shopify"></label>
         </div>
         <label class="switch-row"><input name="in_stock" type="checkbox" checked> In stock</label>
         <button class="button" type="submit">Add bouquet</button>
@@ -145,7 +147,7 @@
 
       <div class="admin-products"><h3>Edit current bouquets</h3>
         {% for bouquet in bouquets %}
-        <form class="admin-product edit-bouquet-form" data-id="{{ bouquet['id'] }}">
+        <form class="admin-product edit-bouquet-form" id="edit-bouquet-{{ bouquet['id'] }}" data-id="{{ bouquet['id'] }}">
           <div class="admin-product-grid">
             <label>Name<input name="name" value="{{ bouquet['name'] }}" required></label>
             <label>Price (£)<input name="price" type="number" min="0" step="0.01" value="{{ '%.2f'|format(bouquet['price_pence'] / 100) }}" required></label>
@@ -153,7 +155,7 @@
               {% for option in ['Christmas', 'Weddings', 'Funerals', 'Birthdays', 'Other'] %}<option value="{{ option }}" {% if bouquet['category'] == option %}selected{% endif %}>{{ option }}</option>{% endfor %}
             </select></label>
             <label>Image<select name="image" class="edit-image-select" data-current="{{ bouquet['image'] }}"><option value="{{ bouquet['image'] }}">{{ bouquet['image'] or 'No image' }}</option></select></label>
-            <label class="wide-field">Shopify URL<input name="shopify_url" type="url" value="{{ bouquet['shopify_url'] }}"></label>
+            <label class="wide-field">Shopify URL <span class="optional">optional</span><input name="shopify_url" type="url" value="{% if bouquet['shopify_url'] != '#' %}{{ bouquet['shopify_url'] }}{% endif %}" placeholder="Leave blank if not using Shopify"></label>
           </div>
           <div class="admin-product-actions">
             <label class="switch-row"><input name="in_stock" type="checkbox" {% if bouquet['in_stock'] %}checked{% endif %}> In stock</label>

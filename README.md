@@ -101,3 +101,8 @@ Click `Owner` beside the bouquet section, enter `DILL_ADMIN_KEY`, then you can:
 - `/health` simple health check
 - `/api/images` authenticated image list
 - `/api/bouquets` authenticated create endpoint
+
+
+## Editing from the storefront
+
+While the owner session is active, public bouquet cards show an **Edit** button instead of the customer purchase action. Clicking it opens Owner controls and scrolls directly to that bouquet's editor. The admin header stays sticky so Close and Log out remain accessible while scrolling. Shopify URLs are optional; when blank, the public card simply has no View button.

@@ -75,6 +75,16 @@ async function loadImages(){availableAdminImages=await(await apiRequest('/api/im
 async function checkAdminSession(){try{const data=await(await fetch('/api/admin/status',{credentials:'same-origin'})).json();if(data.authenticated){showLoggedIn();await loadImages()}else showLoggedOut()}catch(_){showLoggedOut()}}
 async function loginAdmin(){try{await apiRequest('/api/admin/login',{method:'POST',body:JSON.stringify({key:keyInput?.value||''})});showLoggedIn();setMessage('Logged in.');await loadImages()}catch(error){setMessage(error.message,true)}}
 $('#open-admin')?.addEventListener('click',async()=>{adminModal?.showModal();await checkAdminSession()});
+$$('[data-edit-bouquet]').forEach(button => button.addEventListener('click', async () => {
+  if (typeof adminModal?.showModal === 'function' && !adminModal.open) adminModal.showModal();
+  await checkAdminSession();
+  if (!adminControls || adminControls.hidden) return;
+  const editor = $(`#edit-bouquet-${button.dataset.editBouquet}`);
+  editor?.scrollIntoView({behavior:'smooth', block:'center'});
+  editor?.classList.add('editing-highlight');
+  setTimeout(() => editor?.classList.remove('editing-highlight'), 1600);
+}));
+
 $('#close-admin')?.addEventListener('click',()=>adminModal?.close());
 $('#admin-login-button')?.addEventListener('click',loginAdmin);
 keyInput?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();loginAdmin()}});

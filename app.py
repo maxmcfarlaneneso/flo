@@ -145,7 +145,7 @@ def add_bouquet():
         return jsonify(error="Selected image was not found"), 400
     image = image or random_image()
 
-    shopify_url = str(data.get("shopify_url", "#")).strip() or "#"
+    shopify_url = str(data.get("shopify_url", "")).strip()
     category = str(data.get("category", "Other")).strip() or "Other"
     in_stock = 1 if data.get("in_stock", True) else 0
 
@@ -181,7 +181,7 @@ def update_bouquet(bouquet_id):
             return jsonify(error="Selected image was not found"), 400
         updates["image"] = image
     if "shopify_url" in data:
-        updates["shopify_url"] = str(data["shopify_url"]).strip() or "#"
+        updates["shopify_url"] = str(data["shopify_url"]).strip()
     if "category" in data:
         updates["category"] = str(data["category"]).strip() or "Other"
     if "in_stock" in data:

@@ -13,3 +13,11 @@
 
 /* Categorised bouquet rows and editable owner forms */
 .bouquet-group{margin-top:48px}.bouquet-group+.bouquet-group{padding-top:42px;border-top:1px solid var(--line)}.bouquet-group-heading{display:flex;align-items:baseline;justify-content:space-between;gap:20px}.bouquet-group-heading h3{margin:0;font:400 30px Georgia,serif}.bouquet-group-heading span{color:var(--muted);font-size:13px}.wide-field{grid-column:1/-1}.admin-products{margin-top:28px}.edit-bouquet-form{display:block;padding:20px 0;border-bottom:1px solid var(--line)}.admin-product-grid{display:grid;grid-template-columns:1.2fr .6fr .8fr 1fr;gap:12px}.admin-product-actions{display:flex;align-items:center;gap:12px;margin-top:12px}.admin-product-actions .switch-row{margin:0 auto 0 0}.save-bouquet{padding:10px 15px}@media(max-width:900px){.admin-product-grid{grid-template-columns:1fr 1fr}}@media(max-width:700px){.bouquet-group-heading{align-items:flex-start;flex-direction:column;gap:5px}.admin-product-grid{grid-template-columns:1fr}.wide-field{grid-column:auto}.admin-product-actions{align-items:stretch;flex-direction:column}.admin-product-actions .switch-row{margin:0}}
+
+/* Owner modal usability */
+.admin-modal { padding-top:0; }
+.modal-heading { position:sticky; top:0; z-index:6; margin:0 -28px 20px; padding:22px 28px 14px; background:rgba(250,250,243,.98); border-bottom:1px solid var(--line); backdrop-filter:blur(8px); }
+.card-edit-button { border:1px solid var(--deep); border-radius:5px; padding:8px 13px; background:var(--pale-green); color:var(--ink); cursor:pointer; font-size:13px; }
+.card-edit-button:hover { background:var(--light-green); }
+.optional { color:var(--muted); font-size:11px; font-weight:400; }
+.editing-highlight { outline:2px solid var(--green); outline-offset:6px; border-radius:6px; transition:outline-color .3s; }
