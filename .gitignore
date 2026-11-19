@@ -1,19 +1,9 @@
-# pixi environments
-.pixi/*
-!.pixi/config.toml
-
-# Runtime database
+__pycache__/
+*.py[cod]
+.venv/
+.env
+data/
 bouquets.db
 *.db-journal
 *.db-shm
 *.db-wal
-
-# Python
-__pycache__/
-*.py[cod]
-.venv/
-
-# Environment/secrets
-.env
-
-wsgi.py

@@ -1,47 +1,103 @@
 # Dill Flowers
 
-A simple Flask storefront with an owner modal for adding/removing bouquets and changing stock status.
+Complete Flask site for dillflowers.com.
 
-## Install and run
+## Files
+
+```text
+dill-flowers/
+├── app.py
+├── requirements.txt
+├── .gitignore
+├── data/
+├── templates/
+│   └── index.html
+└── static/
+    ├── app.js
+    ├── style.css
+    └── imgs/
+        ├── logo.png
+        └── your flower images...
+```
+
+## Local run
 
 ```bash
 python -m venv .venv
-# Windows
-.venv\Scripts\activate
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-set DILL_ADMIN_KEY=choose-a-long-private-password
-python app.py
 ```
 
-For PowerShell, set the key with:
+Set an owner password:
 
+PowerShell:
 ```powershell
 $env:DILL_ADMIN_KEY = "choose-a-long-private-password"
 python app.py
 ```
 
-Open http://127.0.0.1:5000. Use the small **Owner** link in the Flowers section and enter the same admin key.
+Bash:
+```bash
+export DILL_ADMIN_KEY="choose-a-long-private-password"
+python app.py
+```
+
+Then open http://127.0.0.1:5000.
 
 ## Images
 
-Copy PNG, JPG or WebP files into `static/imgs`. When a bouquet is added with **Choose randomly**, the server selects a random image from that folder. Existing seed products also receive random images when the database is first created.
+Copy `logo.png` and the flower photos into `static/imgs/`.
 
-Delete `bouquets.db` once if you want the three starter bouquets to be regenerated with fresh random images.
+`logo.png` is deliberately excluded from the product image picker and public gallery. PNG, JPG, JPEG and WebP flower photos are supported.
 
-## Shopify
+## Persistent catalogue
 
-Paste the relevant Shopify product URL when adding a bouquet. Until then, the URL can be left blank.
+The app stores bouquet names, prices, assigned images, Shopify URLs and stock status in:
 
-## Before putting it online
+```text
+data/bouquets.db
+```
 
-Do not use the default `change-me` admin key in production. Set `DILL_ADMIN_KEY` in the hosting provider's environment-variable settings. The SQLite database is suitable for this small single-owner site, but your host must provide persistent storage or the catalogue will reset on redeployment.
+The database is created automatically and is not committed to Git.
 
-## Gallery
+On PythonAnywhere, you can retain the default `data/` folder, or set a separate persistent directory before importing the app in the WSGI file:
 
-Every supported image in `static/imgs` is shown automatically in the Gallery section. No separate list needs to be maintained. Clicking an image opens the full-size file in a new tab.
+```python
+import os
+os.environ["DILL_ADMIN_KEY"] = "your-private-password"
+os.environ["DILL_DATA_DIR"] = "/home/YOUR_USERNAME/dillflowers-data"
+```
 
-## Persistent stock data
+Then import the Flask app:
 
-Bouquets and stock status are stored in `bouquets.db` using SQLite. A normal Flask/server restart does **not** remove this file, so the catalogue persists automatically.
+```python
+import sys
+project_home = "/home/YOUR_USERNAME/YOUR_REPO"
+if project_home not in sys.path:
+    sys.path.insert(0, project_home)
 
-For production hosting, `bouquets.db` must live on persistent storage. If your host uses an ephemeral filesystem, set `DILL_DATA_DIR` to a mounted persistent directory.
+from app import app as application
+```
+
+## Existing database
+
+If you already have a working `bouquets.db`, copy it into `data/bouquets.db` before starting this version. Do not overwrite it if it contains the live catalogue.
+
+## Owner controls
+
+Click `Owner` beside the bouquet section, enter `DILL_ADMIN_KEY`, then you can:
+
+- add bouquets
+- choose an image or pick one randomly
+- set the price
+- add the Shopify product URL
+- toggle in/out of stock
+- remove bouquets
+
+## Useful endpoints
+
+- `/` site
+- `/health` simple health check
+- `/api/images` authenticated image list
+- `/api/bouquets` authenticated create endpoint
