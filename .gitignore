@@ -2,8 +2,4 @@ __pycache__/
 *.py[cod]
 .venv/
 .env
-data/
-bouquets.db
-*.db-journal
-*.db-shm
-*.db-wal
+data/consultations.db

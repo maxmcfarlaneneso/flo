@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dill Flowers in Greenock. Everyday flowers, vouchers, weddings and events.">
+  <title>{% block title %}Dill Flowers{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="{{ url_for('home') }}">
+        <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Dill Flowers" onerror="this.hidden=true; this.nextElementSibling.hidden=false">
+        <span hidden>Dill Flowers</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="{{ url_for('home') }}#flowers">Everyday flowers</a>
+        <a href="{{ url_for('home') }}#vouchers">Vouchers</a>
+        <a href="{{ url_for('weddings_events') }}">Weddings &amp; events</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <div><strong>Dill Flowers</strong><br>130 W Blackhall St, Greenock PA15 1XR</div>
+      <div><a href="tel:+441475910316">01475 910316</a><br><a href="https://maps.app.goo.gl/PQTSEmWDh3NzxKww5" target="_blank" rel="noopener noreferrer">Google Maps</a></div>
+    </div>
+  </footer>
+</body>
+</html>
