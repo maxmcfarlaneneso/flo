@@ -1,0 +1,16 @@
+[workspace]
+authors = ["Max.McFarlane <max.mcfarlane@neso.energy>"]
+channels = ["conda-forge"]
+name = "flo"
+platforms = ["win-64"]
+version = "0.1.0"
+conda-pypi-map = false
+
+[tasks]
+
+[dependencies]
+python = "3.14.*"
+
+[environments.default.pypi-dependencies]
+flask = ">=3.1, <4"
+

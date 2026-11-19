@@ -1,0 +1,47 @@
+{
+  // Environment
+  "python.defaultInterpreterPath": "${workspaceFolder}\\.pixi\\envs\\default\\python.exe",
+  "python-envs.defaultEnvManager": "renan-r-santos.pixi-code:pixi",
+  "python-envs.defaultPackageManager": "renan-r-santos.pixi-code:pixi",
+  "python.createEnvironment.trigger": "off",
+  "python.terminal.activateEnvironment": true,
+  "python.envFile": "${workspaceFolder}/.env",
+
+  // Python formatting
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
+  },
+  "black-formatter.args": [
+    "--line-length",
+    "130",
+    "--skip-string-normalization"
+  ],
+
+  // Project paths
+  "terminal.integrated.env.windows": {
+    "PYTHONPATH": "${workspaceFolder}"
+  },
+  "terminal.integrated.env.linux": {
+    "PYTHONPATH": "${workspaceFolder}"
+  },
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+  "marimo.notebookFileRoot": "${workspaceFolder}",
+
+  // Editor
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "files.autoSave": "afterDelay",
+
+  // Terminal
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+
+  // Git
+  "git.autofetch": true,
+
+  // Data Wrangler
+  "dataWrangler.defaultViewingFilterOptions": "advanced",
+
+  // Workspace
+  "security.workspace.trust.untrustedFiles": "open"
+}
