@@ -30,12 +30,12 @@ $('#close-menu')?.addEventListener('click', () => setDrawer(false));
 overlay?.addEventListener('click', () => setDrawer(false));
 $$('#drawer a[href^="#"]').forEach(link => link.addEventListener('click', () => setDrawer(false)));
 
-const carousel = $('#product-carousel');
-function scrollProducts(direction) {
-  carousel?.scrollBy({ left: direction * carousel.clientWidth * 0.8, behavior: 'smooth' });
-}
-$('.products-prev')?.addEventListener('click', () => scrollProducts(-1));
-$('.products-next')?.addEventListener('click', () => scrollProducts(1));
+// Bouquet carousels
+$$('.product-carousel-shell').forEach(shell => {
+  const carousel = shell.querySelector('.product-carousel');
+  shell.querySelector('.products-prev')?.addEventListener('click', () => carousel?.scrollBy({left:-carousel.clientWidth * 0.8, behavior:'smooth'}));
+  shell.querySelector('.products-next')?.addEventListener('click', () => carousel?.scrollBy({left:carousel.clientWidth * 0.8, behavior:'smooth'}));
+});
 
 const galleryItems = $$('.gallery-item');
 const lightbox = $('#lightbox');
@@ -64,82 +64,21 @@ document.addEventListener('keydown', event => {
 });
 
 // Owner controls - one login, then a 10-minute server-side session.
-const adminModal = $('#admin-modal');
-const keyInput = $('#admin-key');
-const message = $('#admin-message');
-const imageSelect = $('#image-select');
-const loginPanel = $('#admin-login');
-const sessionPanel = $('#admin-session');
-const adminControls = $('#admin-controls');
-
-function setMessage(text, error = false) {
-  if (!message) return;
-  message.textContent = text;
-  message.style.color = error ? '#9b3d32' : '#536158';
-}
-function showLoggedIn() {
-  if (loginPanel) loginPanel.hidden = true;
-  if (sessionPanel) sessionPanel.hidden = false;
-  if (adminControls) adminControls.hidden = false;
-}
-function showLoggedOut() {
-  if (loginPanel) loginPanel.hidden = false;
-  if (sessionPanel) sessionPanel.hidden = true;
-  if (adminControls) adminControls.hidden = true;
-  if (keyInput) keyInput.value = '';
-}
-async function apiRequest(url, options = {}) {
-  const response = await fetch(url, {...options, credentials:'same-origin', headers:{'Content-Type':'application/json', ...(options.headers || {})}});
-  if (!response.ok) {
-    let detail = response.status === 401 ? 'Owner session expired. Please log in again.' : `Request failed (${response.status})`;
-    try { detail = (await response.json()).error || detail; } catch (_) {}
-    if (response.status === 401) showLoggedOut();
-    throw new Error(detail);
-  }
-  return response;
-}
-async function loadImages() {
-  const response = await apiRequest('/api/images');
-  const images = await response.json();
-  if (imageSelect) imageSelect.innerHTML = '<option value="">Choose randomly</option>' + images.map(image => `<option value="${image}">${image}</option>`).join('');
-}
-async function checkAdminSession() {
-  try {
-    const response = await fetch('/api/admin/status', {credentials:'same-origin'});
-    const data = await response.json();
-    if (data.authenticated) { showLoggedIn(); await loadImages(); } else showLoggedOut();
-  } catch (_) { showLoggedOut(); }
-}
-async function loginAdmin() {
-  try {
-    await apiRequest('/api/admin/login', {method:'POST', body:JSON.stringify({key:keyInput?.value || ''})});
-    showLoggedIn(); setMessage('Logged in.'); await loadImages();
-  } catch (error) { setMessage(error.message, true); }
-}
-$('#open-admin')?.addEventListener('click', async () => { adminModal?.showModal(); await checkAdminSession(); });
-$('#close-admin')?.addEventListener('click', () => adminModal?.close());
-$('#admin-login-button')?.addEventListener('click', loginAdmin);
-keyInput?.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); loginAdmin(); } });
-$('#admin-logout-button')?.addEventListener('click', async () => {
-  try { await fetch('/api/admin/logout', {method:'POST', credentials:'same-origin'}); } finally { showLoggedOut(); setMessage('Logged out.'); }
-});
-$('#add-bouquet-form')?.addEventListener('submit', async event => {
-  event.preventDefault();
-  const form = new FormData(event.currentTarget);
-  const data = Object.fromEntries(form.entries());
-  data.in_stock = form.get('in_stock') === 'on';
-  try { await apiRequest('/api/bouquets', {method:'POST', body:JSON.stringify(data)}); location.reload(); }
-  catch (error) { setMessage(error.message, true); }
-});
-$$('.stock-toggle').forEach(toggle => toggle.addEventListener('change', async event => {
-  const id = event.target.closest('.admin-product')?.dataset.id;
-  const checked = event.target.checked;
-  try { await apiRequest(`/api/bouquets/${id}`, {method:'PATCH', body:JSON.stringify({in_stock:checked})}); }
-  catch (error) { event.target.checked = !checked; setMessage(error.message, true); }
-}));
-$$('.delete-button').forEach(button => button.addEventListener('click', async event => {
-  const row = event.target.closest('.admin-product');
-  if (!row || !confirm(`Remove ${row.querySelector('strong')?.textContent || 'this bouquet'}?`)) return;
-  try { await apiRequest(`/api/bouquets/${row.dataset.id}`, {method:'DELETE'}); row.remove(); }
-  catch (error) { setMessage(error.message, true); }
-}));
+const adminModal=$('#admin-modal'),keyInput=$('#admin-key'),message=$('#admin-message'),imageSelect=$('#image-select'),loginPanel=$('#admin-login'),sessionPanel=$('#admin-session'),adminControls=$('#admin-controls');
+let availableAdminImages=[];
+function setMessage(text,error=false){if(message){message.textContent=text;message.style.color=error?'#9b3d32':'#536158'}}
+function showLoggedIn(){if(loginPanel)loginPanel.hidden=true;if(sessionPanel)sessionPanel.hidden=false;if(adminControls)adminControls.hidden=false}
+function showLoggedOut(){if(loginPanel)loginPanel.hidden=false;if(sessionPanel)sessionPanel.hidden=true;if(adminControls)adminControls.hidden=true;if(keyInput)keyInput.value=''}
+async function apiRequest(url,options={}){const response=await fetch(url,{...options,credentials:'same-origin',headers:{'Content-Type':'application/json',...(options.headers||{})}});if(!response.ok){let detail=response.status===401?'Owner session expired. Please log in again.':`Request failed (${response.status})`;try{detail=(await response.json()).error||detail}catch(_){}if(response.status===401)showLoggedOut();throw new Error(detail)}return response}
+function populateImageSelect(select,current=''){if(select)select.innerHTML='<option value="">No image / choose randomly when adding</option>'+availableAdminImages.map(image=>`<option value="${image}" ${image===current?'selected':''}>${image}</option>`).join('')}
+async function loadImages(){availableAdminImages=await(await apiRequest('/api/images')).json();populateImageSelect(imageSelect);$$('.edit-image-select').forEach(select=>populateImageSelect(select,select.dataset.current||''))}
+async function checkAdminSession(){try{const data=await(await fetch('/api/admin/status',{credentials:'same-origin'})).json();if(data.authenticated){showLoggedIn();await loadImages()}else showLoggedOut()}catch(_){showLoggedOut()}}
+async function loginAdmin(){try{await apiRequest('/api/admin/login',{method:'POST',body:JSON.stringify({key:keyInput?.value||''})});showLoggedIn();setMessage('Logged in.');await loadImages()}catch(error){setMessage(error.message,true)}}
+$('#open-admin')?.addEventListener('click',async()=>{adminModal?.showModal();await checkAdminSession()});
+$('#close-admin')?.addEventListener('click',()=>adminModal?.close());
+$('#admin-login-button')?.addEventListener('click',loginAdmin);
+keyInput?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();loginAdmin()}});
+$('#admin-logout-button')?.addEventListener('click',async()=>{try{await fetch('/api/admin/logout',{method:'POST',credentials:'same-origin'})}finally{showLoggedOut();setMessage('Logged out.')}});
+$('#add-bouquet-form')?.addEventListener('submit',async event=>{event.preventDefault();const form=new FormData(event.currentTarget),data=Object.fromEntries(form.entries());data.in_stock=form.get('in_stock')==='on';try{await apiRequest('/api/bouquets',{method:'POST',body:JSON.stringify(data)});location.reload()}catch(error){setMessage(error.message,true)}});
+$$('.edit-bouquet-form').forEach(element=>element.addEventListener('submit',async event=>{event.preventDefault();const form=new FormData(element),data=Object.fromEntries(form.entries());data.in_stock=form.get('in_stock')==='on';try{await apiRequest(`/api/bouquets/${element.dataset.id}`,{method:'PATCH',body:JSON.stringify(data)});setMessage(`Saved ${data.name}. Refresh to see category-row changes.`)}catch(error){setMessage(error.message,true)}}));
+$$('.delete-button').forEach(button=>button.addEventListener('click',async event=>{const row=event.target.closest('.edit-bouquet-form'),name=row?.querySelector('[name="name"]')?.value||'this bouquet';if(!row||!confirm(`Remove ${name}?`))return;try{await apiRequest(`/api/bouquets/${row.dataset.id}`,{method:'DELETE'});row.remove();setMessage(`Removed ${name}.`)}catch(error){setMessage(error.message,true)}}));

@@ -55,10 +55,14 @@ def init_db():
                 image TEXT NOT NULL DEFAULT '',
                 in_stock INTEGER NOT NULL DEFAULT 1,
                 shopify_url TEXT NOT NULL DEFAULT '#',
+                category TEXT NOT NULL DEFAULT 'Other',
                 sort_order INTEGER NOT NULL DEFAULT 0
             )
             """
         )
+        columns = {row[1] for row in db.execute("PRAGMA table_info(bouquets)").fetchall()}
+        if "category" not in columns:
+            db.execute("ALTER TABLE bouquets ADD COLUMN category TEXT NOT NULL DEFAULT 'Other'")
 
 
 def require_admin():
@@ -72,8 +76,24 @@ def require_admin():
 @app.get("/")
 def home():
     with get_db() as db:
-        bouquets = db.execute("SELECT * FROM bouquets ORDER BY sort_order, id").fetchall()
-    return render_template("index.html", bouquets=bouquets, gallery_images=available_images())
+        bouquets = db.execute("SELECT * FROM bouquets ORDER BY category, sort_order, id").fetchall()
+
+    preferred_order = ["Christmas", "Weddings", "Funerals", "Birthdays", "Other"]
+    grouped = {}
+    for bouquet in bouquets:
+        category = bouquet["category"] or "Other"
+        grouped.setdefault(category, []).append(bouquet)
+
+    ordered_categories = [category for category in preferred_order if category in grouped]
+    ordered_categories.extend(sorted(category for category in grouped if category not in preferred_order))
+    bouquet_groups = [(category, grouped[category]) for category in ordered_categories]
+
+    return render_template(
+        "index.html",
+        bouquets=bouquets,
+        bouquet_groups=bouquet_groups,
+        gallery_images=available_images(),
+    )
 
 
 @app.post("/api/admin/login")
@@ -126,13 +146,14 @@ def add_bouquet():
     image = image or random_image()
 
     shopify_url = str(data.get("shopify_url", "#")).strip() or "#"
+    category = str(data.get("category", "Other")).strip() or "Other"
     in_stock = 1 if data.get("in_stock", True) else 0
 
     with get_db() as db:
         next_order = db.execute("SELECT COALESCE(MAX(sort_order), -1) + 1 FROM bouquets").fetchone()[0]
         cursor = db.execute(
-            "INSERT INTO bouquets (name, price_pence, image, in_stock, shopify_url, sort_order) VALUES (?, ?, ?, ?, ?, ?)",
-            (name, price_pence, image, in_stock, shopify_url, next_order),
+            "INSERT INTO bouquets (name, price_pence, image, in_stock, shopify_url, category, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (name, price_pence, image, in_stock, shopify_url, category, next_order),
         )
         bouquet_id = cursor.lastrowid
     return jsonify(id=bouquet_id), 201
@@ -161,6 +182,8 @@ def update_bouquet(bouquet_id):
         updates["image"] = image
     if "shopify_url" in data:
         updates["shopify_url"] = str(data["shopify_url"]).strip() or "#"
+    if "category" in data:
+        updates["category"] = str(data["category"]).strip() or "Other"
     if "in_stock" in data:
         updates["in_stock"] = 1 if data["in_stock"] else 0
     if "sort_order" in data:
