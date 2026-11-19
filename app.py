@@ -11,7 +11,7 @@ DATA_DIR = Path(os.environ.get("DILL_DATA_DIR", BASE_DIR))
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 DB_PATH = DATA_DIR / "bouquets.db"
 IMAGE_DIR = BASE_DIR / "static" / "imgs"
-ADMIN_KEY = os.environ.get("DILL_ADMIN_KEY", "change-me")
+ADMIN_KEY = os.environ.get("DILL_ADMIN_KEY", "bruce")
 
 
 def get_db():
