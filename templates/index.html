@@ -3,126 +3,158 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Dill Flowers - fresh seasonal flowers and hand-tied bouquets.">
-  <title>Dill Flowers</title>
+  <meta name="description" content="Dill Flowers - fresh seasonal flowers and hand-tied bouquets in Greenock.">
+  <meta name="theme-color" content="#263d31">
+  <title>Dill Flowers | Florist in Greenock</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script src="{{ url_for('static', filename='app.js') }}" defer></script>
 </head>
 <body>
-  <div class="christmas-banner">
-    🎄 Christmas bouquets now available — order early for Christmas
+  <div class="announcement-bar">
+    <div class="wrap announcement-inner">
+      <button class="announcement-arrow" id="announcement-prev" type="button" aria-label="Previous announcement">‹</button>
+      <div class="announcement-messages" aria-live="polite">
+        <p class="announcement-message active">Christmas flowers now available · Order early for Christmas</p>
+        <p class="announcement-message">Local delivery available · Call 01475 910316</p>
+        <p class="announcement-message">Beautiful flowers, hand-tied in Greenock</p>
+      </div>
+      <button class="announcement-arrow" id="announcement-next" type="button" aria-label="Next announcement">›</button>
+    </div>
   </div>
-  <header>
-    <div class="wrap nav">
-      <a class="logo" href="/">Dill Flowers</a>
-      <nav><a href="#flowers">Flowers</a><a href="#gallery">Gallery</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <button class="header-icon menu-button" id="open-menu" type="button" aria-label="Open menu"><span></span><span></span><span></span></button>
+      <a class="header-logo" href="/" aria-label="Dill Flowers home"><img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Dill Flowers"></a>
+      <a class="header-icon phone-icon" href="tel:+441475910316" aria-label="Call Dill Flowers">☎</a>
     </div>
   </header>
 
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-header"><a href="/" class="drawer-brand">Dill Flowers</a><button id="close-menu" class="drawer-close" type="button" aria-label="Close menu">×</button></div>
+    <nav class="drawer-nav">
+      <p class="drawer-heading">Shop</p>
+      <a href="#flowers">Flowers <span>→</span></a>
+      <a href="#flowers">Christmas flowers <span>→</span></a>
+      <a href="#gallery">Gallery <span>→</span></a>
+      <p class="drawer-heading">Services</p>
+      <a href="#contact">Weddings <span>→</span></a>
+      <a href="#contact">Funeral flowers <span>→</span></a>
+      <a href="#contact">Special occasions <span>→</span></a>
+      <p class="drawer-heading">Dill Flowers</p>
+      <a href="#about">About us <span>→</span></a>
+      <a href="#contact">Visit us <span>→</span></a>
+      <a href="https://search.google.com/local/writereview?placeid=ChIJTQV8RQGviUgRZUdY1A9JCvg" target="_blank" rel="noopener noreferrer">Leave a Google review <span>↗</span></a>
+    </nav>
+    <div class="drawer-contact"><p>130 W Blackhall St<br>Greenock PA15 1XR</p><a href="tel:+441475910316">01475 910316</a></div>
+  </aside>
+
   <main>
     <section class="wrap hero">
-      <div>
-        <p class="eyebrow">Christmas at Dill Flowers</p>
-
+      <div class="hero-copy">
+        <p class="eyebrow festive-eyebrow">Christmas at Dill Flowers</p>
         <h1>Beautiful flowers for the festive season.</h1>
-
-        <p class="intro">
-          Hand-tied bouquets made with fresh seasonal flowers.
-          Order for Christmas, collection or local delivery.
-        </p>
-
-        <a class="button" href="#flowers">Shop flowers</a>
+        <p class="intro">Hand-tied bouquets made with fresh seasonal flowers. Order for collection or local delivery from our Greenock shop.</p>
+        <div class="hero-actions"><a class="button" href="#flowers">Shop flowers</a><a class="text-link" href="tel:+441475910316">Call 01475 910316</a></div>
       </div>
-      <div class="hero-flower">
-        <img src="{{ url_for('static', filename='imgs/logo.png') }}" loading="lazy">
-      </div>
+      <div class="hero-flower"><img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Dill Flowers" loading="eager"></div>
     </section>
 
     <section id="flowers" class="flowers">
       <div class="wrap section">
         <p class="eyebrow">Our flowers</p>
         <div class="section-heading">
-          <h2>Choose something lovely</h2>
+          <div><h2>Choose something lovely</h2><p>Seasonal bouquets available for collection and local delivery.</p></div>
           <button class="admin-link" id="open-admin" type="button">Owner</button>
         </div>
-
-        <div class="products">
-          {% for bouquet in bouquets %}
-          <article class="product-card {% if not bouquet['in_stock'] %}out-of-stock{% endif %}" data-id="{{ bouquet['id'] }}">
-            <div class="product-image">
-              {% if bouquet['image'] %}
-              <img src="{{ url_for('static', filename='imgs/' + bouquet['image']) }}" alt="{{ bouquet['name'] }}" loading="lazy">
-              {% else %}
-              <div class="image-placeholder">Add images to static/imgs</div>
-              {% endif %}
-              {% if not bouquet['in_stock'] %}<span class="stock-badge">Out of stock</span>{% endif %}
-            </div>
-            <div class="product-text">
-              <div><h3>{{ bouquet['name'] }}</h3><p>£{{ '%.2f'|format(bouquet['price_pence'] / 100) }}</p></div>
-              {% if bouquet['in_stock'] %}
-              <a href="{{ bouquet['shopify_url'] }}">View</a>
-              {% else %}
-              <span class="disabled-button">Unavailable</span>
-              {% endif %}
-            </div>
-          </article>
-          {% else %}
-          <p>No bouquets are listed at the moment.</p>
-          {% endfor %}
+        <div class="product-carousel-shell">
+          <button class="carousel-arrow products-prev" type="button" aria-label="Previous bouquets">‹</button>
+          <div class="products" id="product-carousel">
+            {% for bouquet in bouquets %}
+            <article class="product-card {% if not bouquet['in_stock'] %}out-of-stock{% endif %}" data-id="{{ bouquet['id'] }}">
+              <div class="product-image">
+                {% if bouquet['image'] %}<img src="{{ url_for('static', filename='imgs/' + bouquet['image']) }}" alt="{{ bouquet['name'] }}" loading="lazy">
+                {% else %}<div class="image-placeholder">Add images to static/imgs</div>{% endif %}
+                {% if not bouquet['in_stock'] %}<span class="stock-badge">Out of stock</span>{% endif %}
+              </div>
+              <div class="product-text">
+                <div><h3>{{ bouquet['name'] }}</h3><p>£{{ '%.2f'|format(bouquet['price_pence'] / 100) }}</p></div>
+                {% if bouquet['in_stock'] %}<a href="{{ bouquet['shopify_url'] }}">View</a>{% else %}<span class="disabled-button">Unavailable</span>{% endif %}
+              </div>
+            </article>
+            {% else %}<p>No bouquets are listed at the moment.</p>{% endfor %}
+          </div>
+          <button class="carousel-arrow products-next" type="button" aria-label="Next bouquets">›</button>
         </div>
+      </div>
+    </section>
+
+    <section class="promise-strip">
+      <div class="wrap promise-grid">
+        <div><strong>Made in Greenock</strong><span>Hand-tied with care</span></div>
+        <div><strong>Local delivery</strong><span>Fresh flowers to their door</span></div>
+        <div><strong>Order by phone</strong><span><a href="tel:+441475910316">01475 910316</a></span></div>
       </div>
     </section>
 
     <section id="gallery" class="gallery">
       <div class="wrap section">
-        <p class="eyebrow">Gallery</p>
-        <h2>A little inspiration</h2>
+        <p class="eyebrow">Gallery</p><h2>A little inspiration</h2><p class="section-intro">A look at flowers and arrangements from Dill Flowers.</p>
         <div class="gallery-grid">
           {% for image in gallery_images %}
-          <a class="gallery-item" href="{{ url_for('static', filename='imgs/' + image) }}" target="_blank" rel="noopener">
-            <img src="{{ url_for('static', filename='imgs/' + image) }}" alt="Flowers by Dill Flowers" loading="lazy">
-          </a>
-          {% else %}
-          <p>Add images to <code>static/imgs</code> and they will appear here automatically.</p>
-          {% endfor %}
+            {% if image != 'logo.png' %}
+            <button class="gallery-item" type="button" data-full="{{ url_for('static', filename='imgs/' + image) }}" aria-label="Open flower image">
+              <img src="{{ url_for('static', filename='imgs/' + image) }}" alt="Flowers by Dill Flowers" loading="lazy">
+            </button>
+            {% endif %}
+          {% else %}<p>Add images to <code>static/imgs</code> and they will appear here automatically.</p>{% endfor %}
         </div>
       </div>
     </section>
 
-    <section id="about" class="wrap about">
-      <p class="eyebrow">Dill Flowers</p><h2>Flowers picked with care</h2>
-      <p>We make uncomplicated, seasonal bouquets for birthdays, thank-yous, celebrations and those times when flowers are simply a nice idea.</p>
+    <section id="about" class="about-section">
+      <div class="wrap about">
+        <p class="eyebrow">Dill Flowers</p><h2>Flowers picked with care</h2>
+        <p>We make uncomplicated, seasonal bouquets for birthdays, thank-yous, celebrations and those times when flowers are simply a nice idea.</p>
+        <a class="text-link" href="#contact">Come and visit us →</a>
+      </div>
     </section>
 
-    <section id="contact" class="contact"><div class="wrap contact-inner">
-      <div><h2>Come and say hello</h2><p>Visit the shop or get in touch about an order.</p></div>
-      <a
-        class="button review-button"
-        href="https://search.google.com/local/writereview?placeid=ChIJTQV8RQGviUgRZUdY1A9JCvg"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Leave a review
-      </a>
-      <div>
-        <p>130 W Blackhall St, Greenock PA15 1XR, UK</p>
-        <p><a class="contact-link" href="tel:+441475910316">01475 910316</a></p>
-        <p>dillflowers.com</p>
+    <section id="contact" class="contact">
+      <div class="wrap contact-inner">
+        <div><p class="eyebrow light">Greenock florist</p><h2>Come and say hello</h2><p>Visit the shop or get in touch about an order.</p></div>
+        <div class="contact-actions">
+          <a class="button light-button" href="tel:+441475910316">☎ Call 01475 910316</a>
+          <a class="button review-button" href="https://search.google.com/local/writereview?placeid=ChIJTQV8RQGviUgRZUdY1A9JCvg" target="_blank" rel="noopener noreferrer">Leave a review</a>
+        </div>
+        <address><strong>Dill Flowers</strong><br>130 W Blackhall St<br>Greenock PA15 1XR<br><a href="tel:+441475910316">01475 910316</a><br><a href="https://dillflowers.com">dillflowers.com</a></address>
       </div>
-    </div></section>
+    </section>
   </main>
 
-  <footer>© 2026 Dill Flowers</footer>
+  <footer class="site-footer">
+    <div class="wrap footer-main">
+      <div class="footer-brand"><img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Dill Flowers"><p>Flowers for life's moments, made with care in Greenock.</p></div>
+      <div><h3>Shop</h3><a href="#flowers">Flowers</a><a href="#flowers">Christmas</a><a href="#gallery">Gallery</a></div>
+      <div><h3>Visit us</h3><p>130 W Blackhall St<br>Greenock<br>PA15 1XR</p></div>
+      <div><h3>Get in touch</h3><a href="tel:+441475910316">01475 910316</a><a href="https://maps.app.goo.gl/PQTSEmWDh3NzxKww5" target="_blank" rel="noopener noreferrer">Google Maps ↗</a><a href="https://search.google.com/local/writereview?placeid=ChIJTQV8RQGviUgRZUdY1A9JCvg" target="_blank" rel="noopener noreferrer">Leave a review ↗</a></div>
+    </div>
+    <div class="wrap footer-bottom"><span>© 2026 Dill Flowers</span><a href="https://dillflowers.com">dillflowers.com</a></div>
+  </footer>
 
-  <dialog id="admin-modal">
+  <a class="floating-call" href="tel:+441475910316" aria-label="Call Dill Flowers">☎ <span>Call us</span></a>
+
+  <dialog class="lightbox" id="lightbox"><button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close image">×</button><button class="lightbox-arrow" id="lightbox-prev" type="button" aria-label="Previous image">‹</button><img id="lightbox-image" alt="Flowers by Dill Flowers"><button class="lightbox-arrow" id="lightbox-next" type="button" aria-label="Next image">›</button><div class="lightbox-counter" id="lightbox-counter"></div></dialog>
+
+  <dialog id="admin-modal" class="admin-modal">
     <div class="modal-heading"><div><p class="eyebrow">Owner controls</p><h2>Manage bouquets</h2></div><button id="close-admin" class="close-button" aria-label="Close">×</button></div>
     <label>Admin key<input id="admin-key" type="password" autocomplete="current-password" placeholder="Enter admin key"></label>
     <p id="admin-message" class="admin-message"></p>
-
     <form id="add-bouquet-form">
       <h3>Add a bouquet</h3>
       <div class="form-grid">
-        <label>Name<input name="name" required placeholder="Spring bouquet"></label>
+        <label>Name<input name="name" required placeholder="Christmas bouquet"></label>
         <label>Price (£)<input name="price" required min="0" step="0.01" type="number" placeholder="35.00"></label>
         <label>Image<select name="image" id="image-select"><option value="">Choose randomly</option></select></label>
         <label>Shopify URL<input name="shopify_url" type="url" placeholder="https://..."></label>
@@ -130,15 +162,9 @@
       <label class="switch-row"><input name="in_stock" type="checkbox" checked> In stock</label>
       <button class="button" type="submit">Add bouquet</button>
     </form>
-
-    <div class="admin-products">
-      <h3>Current bouquets</h3>
+    <div class="admin-products"><h3>Current bouquets</h3>
       {% for bouquet in bouquets %}
-      <div class="admin-product" data-id="{{ bouquet['id'] }}">
-        <strong>{{ bouquet['name'] }}</strong>
-        <label class="switch-row"><input class="stock-toggle" type="checkbox" {% if bouquet['in_stock'] %}checked{% endif %}> In stock</label>
-        <button class="delete-button" type="button">Remove</button>
-      </div>
+      <div class="admin-product" data-id="{{ bouquet['id'] }}"><strong>{{ bouquet['name'] }}</strong><label class="switch-row"><input class="stock-toggle" type="checkbox" {% if bouquet['in_stock'] %}checked{% endif %}> In stock</label><button class="delete-button" type="button">Remove</button></div>
       {% endfor %}
     </div>
   </dialog>
