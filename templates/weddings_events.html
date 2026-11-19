@@ -8,7 +8,9 @@
       <h1>Flowers planned around your day.</h1>
       <p>Wedding flowers, table arrangements and event flowers in Greenock and the surrounding area.</p>
     </div>
-    <div class="photo-placeholder wedding-photo"><span>Wedding / event photo</span></div>
+    <div class="photo-placeholder wedding-photo">
+      <img src="{{ url_for('static', filename='imgs/wedding1.jpeg') }}" alt="Dill Flowers" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    </div>
   </div>
 </section>
 

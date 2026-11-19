@@ -8,9 +8,10 @@
       <p>Fresh, seasonal flowers for collection or local delivery from our shop on West Blackhall Street.</p>
       <a class="button" href="tel:+441475910316">Call to order</a>
     </div>
-    <div class="photo-placeholder hero-photo">
-      <span>Shop / flowers photo</span>
-      <small>Replace with an image from your bank</small>
+    <div class="hero-photo">
+      <img src="{{ url_for('static', filename='imgs/IMG_8955.jpeg') }}" alt="Dill Flowers" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+      <!-- <span>Shop / flowers photo</span>
+      <small>Replace with an image from your bank</small> -->
     </div>
   </div>
 </section>
@@ -40,7 +41,9 @@
     </div>
     <div>
       <div class="voucher-list"><span>£25</span><span>£50</span><span>Custom amount</span></div>
-      <div class="photo-placeholder voucher-photo"><span>Voucher / shop detail photo</span></div>
+      <div class="photo-placeholder voucher-photo">
+        <img src="{{ url_for('static', filename='imgs/voucher.jpeg') }}" alt="Dill Flowers" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+      </div>
     </div>
   </div>
 </section>
