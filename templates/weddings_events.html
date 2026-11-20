@@ -1,53 +1,21 @@
-{% extends "base.html" %}
-{% block title %}Weddings & Events | Dill Flowers{% endblock %}
-{% block content %}
-<section class="page-heading">
-  <div class="wrap wedding-hero-grid">
-    <div>
-      <p class="eyebrow">Weddings &amp; events</p>
-      <h1>Flowers planned around your day.</h1>
-      <p>Wedding flowers, table arrangements and event flowers in Greenock and the surrounding area.</p>
+{% extends "base.html" %}{% block title %}Weddings & Events | Dill Flowers{% endblock %}{% block content %}<section
+    class="section">
+    <div class="wrap split">
+        <div>
+            <p class="eyebrow">Weddings & events</p>
+            <h1>Let's talk flowers.</h1>{% if wedding_image %}<img class="order-image"
+                src="{{ url_for('static',filename='imgs/'+wedding_image) }}" alt="Wedding flowers">{% endif %}
+        </div>
+        <form method="post" class="checkout-form">{% if error %}<p class="form-error">{{ error }}</p>{% endif
+            %}<label>Name *<input name="name" value="{{ form.get('name','') }}" required></label><label>Email *<input
+                    name="email" type="email" value="{{ form.get('email','') }}" required></label><label>Phone<input
+                    name="phone" type="tel"></label><label>Event type *<select name="event_type" required>
+                    <option value="">Choose</option>
+                    <option>Wedding</option>
+                    <option>Party</option>
+                    <option>Corporate event</option>
+                </select></label><label>Date<input name="event_date" type="date"></label><label>Venue<input
+                    name="venue"></label><label>Budget<input name="budget"></label><label>Tell us about the day<textarea
+                    name="message" rows="6"></textarea></label><button class="button">Send request</button></form>
     </div>
-    <div class="photo-placeholder wedding-photo">
-      <img src="{{ url_for('static', filename='imgs/wedding1.jpeg') }}" alt="Dill Flowers" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap form-layout">
-    <div>
-      <h2>Request a consultation</h2>
-      <p>Share the basics below. We will contact you to arrange a conversation and discuss ideas, availability and budget.</p>
-      <p><strong>Prefer to speak?</strong><br><a href="tel:+441475910316">Call 01475 910316</a></p>
-    </div>
-
-    <form method="post" class="consultation-form">
-      {% if error %}<p class="form-error">{{ error }}</p>{% endif %}
-      <label>Name *<input name="name" value="{{ form.get('name', '') }}" required autocomplete="name"></label>
-      <label>Email *<input name="email" type="email" value="{{ form.get('email', '') }}" required autocomplete="email"></label>
-      <label>Phone<input name="phone" type="tel" value="{{ form.get('phone', '') }}" autocomplete="tel"></label>
-      <label>Event type *
-        <select name="event_type" required>
-          <option value="">Choose one</option>
-          {% for option in ['Wedding', 'Party', 'Corporate event', 'Other event'] %}
-          <option {% if form.get('event_type') == option %}selected{% endif %}>{{ option }}</option>
-          {% endfor %}
-        </select>
-      </label>
-      <label>Event date<input name="event_date" type="date" value="{{ form.get('event_date', '') }}"></label>
-      <label>Venue<input name="venue" value="{{ form.get('venue', '') }}"></label>
-      <label>Approximate flower budget
-        <select name="budget">
-          <option value="">Not sure yet</option>
-          {% for option in ['Under £500', '£500–£1,000', '£1,000–£2,500', 'Over £2,500'] %}
-          <option {% if form.get('budget') == option %}selected{% endif %}>{{ option }}</option>
-          {% endfor %}
-        </select>
-      </label>
-      <label class="full">Tell us about your plans<textarea name="message" rows="6">{{ form.get('message', '') }}</textarea></label>
-      <button class="button full" type="submit">Send consultation request</button>
-    </form>
-  </div>
-</section>
-{% endblock %}
+</section>{% endblock %}

@@ -1,34 +1,71 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Dill Flowers in Greenock. Everyday flowers, vouchers, weddings and events.">
-  <title>{% block title %}Dill Flowers{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#bcbc7f">
+    <title>{% block title %}Dill Flowers{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="wrap header-inner">
-      <a class="brand" href="{{ url_for('home') }}">
-        <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Dill Flowers" onerror="this.hidden=true; this.nextElementSibling.hidden=false">
-        <span hidden>Dill Flowers</span>
-      </a>
-      <nav aria-label="Main navigation">
-        <a href="{{ url_for('home') }}#flowers">Everyday flowers</a>
-        <a href="{{ url_for('home') }}#vouchers">Vouchers</a>
-        <a href="{{ url_for('weddings_events') }}">Weddings &amp; events</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>{% block content %}{% endblock %}</main>
-
-  <footer>
-    <div class="wrap footer-inner">
-      <div><strong>Dill Flowers</strong><br>130 W Blackhall St, Greenock PA15 1XR</div>
-      <div><a href="tel:+441475910316">01475 910316</a><br><a href="https://maps.app.goo.gl/PQTSEmWDh3NzxKww5" target="_blank" rel="noopener noreferrer">Google Maps</a></div>
-    </div>
-  </footer>
+    <header class="site-header">
+        <div class="wrap header-inner"><a class="brand" href="{{ url_for('home') }}"><img
+                    src="{{ url_for('static',filename='imgs/VinylStickerLogoTransparent377.png') }}" alt="Dill Flowers"
+                    onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>Dill Flowers</span></a>
+            <nav><a href="{{ url_for('home') }}#flowers">Flowers</a><a
+                    href="{{ url_for('home') }}#vouchers">Vouchers</a><a
+                    href="{{ url_for('weddings_events') }}">Weddings</a><a href="{{ url_for('view_basket') }}">Basket
+                    ({{ basket_count }})</a><button id="open-admin" class="nav-button" type="button">Owner</button>
+            </nav>
+        </div>
+    </header>
+    <main>{% block content %}{% endblock %}</main>{% block footer %}<footer class="site-footer">
+        <div class="wrap footer-grid">
+            <div>
+                <h3>Dill Flowers</h3>
+                <p>Flowers for everyday moments, weddings and events in Greenock.</p>
+            </div>
+            <div>
+                <h3>Quick links</h3><a href="{{ url_for('home') }}#flowers">Flowers</a><a
+                    href="{{ url_for('home') }}#vouchers">Vouchers</a><a
+                    href="{{ url_for('weddings_events') }}">Weddings</a>
+            </div>
+            <div>
+                <h3>Visit</h3>
+                <p>130 W Blackhall St<br>Greenock<br>PA15 1XR</p><a href="https://maps.app.goo.gl/PQTSEmWDh3NzxKww5"
+                    target="_blank">Google Maps ↗</a>
+            </div>
+            <div>
+                <h3>Contact</h3><a href="tel:+441475910316">01475 910316</a>
+            </div>
+        </div>
+        <div class="wrap newsletter" id="newsletter">
+            <div>
+                <h3>Newsletter</h3>
+                <p>Occasional flowers, shop news and seasonal dates.</p>
+            </div>
+            <form method="post" action="{{ url_for('newsletter') }}"><input type="email" name="email"
+                    placeholder="Email address" required><button>Subscribe</button></form>{% if subscribed %}<p>Thanks,
+                you're on the list.</p>{% endif %}
+        </div>
+        <div class="wrap footer-bottom">© 2026 Dill Flowers</div>
+    </footer>{% endblock %}
+    <dialog id="admin-modal" class="admin-modal">
+        <div class="modal-heading">
+            <h2>Owner</h2><button id="close-admin" type="button">×</button>
+        </div>
+        <div id="admin-login"><input id="admin-key" type="password" placeholder="Admin password"><button
+                id="admin-login-button">Log in</button></div>
+        <div id="admin-session" hidden>
+            <p>Logged in for 10 minutes of inactivity.</p><button id="admin-logout-button">Log out</button>
+        </div>
+        <p id="admin-message"></p>
+        <div id="admin-controls" hidden>{% block admin_controls %}<p>Open the home page to edit product and page images.
+            </p>{% endblock %}</div>
+    </dialog>
 </body>
+
 </html>
