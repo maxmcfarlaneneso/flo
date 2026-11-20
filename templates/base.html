@@ -15,11 +15,20 @@
         <div class="wrap header-inner"><a class="brand" href="{{ url_for('home') }}"><img
                     src="{{ url_for('static',filename='imgs/VinylStickerLogoTransparent377.png') }}" alt="Dill Flowers"
                     onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>Dill Flowers</span></a>
-            <nav><a href="{{ url_for('home') }}#flowers">Flowers</a><a
-                    href="{{ url_for('home') }}#vouchers">Vouchers</a><a
-                    href="{{ url_for('weddings_events') }}">Weddings</a><a href="{{ url_for('view_basket') }}">Basket
-                    ({{ basket_count }})</a><button id="open-admin" class="nav-button" type="button">Owner</button>
+            <nav>
+                <a href="{{ url_for('home') }}#flowers">Flowers</a>
+                <a href="{{ url_for('home') }}#vouchers">Vouchers</a>
+                <a href="{{ url_for('weddings_events') }}">Weddings</a>
+
+                <a class="instagram-link" href="https://www.instagram.com/dill__flowers?cnvx=MXNrODBnNjFodThnNg=="
+                    target="_blank" rel="noopener noreferrer" aria-label="Dill Flowers on Instagram">
+                    <img src="{{ url_for('static', filename='imgs/insta.png') }}" alt="Instagram">
+                </a>
+
+                <a href="{{ url_for('view_basket') }}">Basket ({{ basket_count }})</a>
+                <button id="open-admin" class="nav-button" type="button">Owner</button>
             </nav>
+
         </div>
     </header>
     <main>{% block content %}{% endblock %}</main>{% block footer %}<footer class="site-footer">
@@ -39,7 +48,16 @@
                     target="_blank">Google Maps ↗</a>
             </div>
             <div>
-                <h3>Contact</h3><a href="tel:+441475910316">01475 910316</a>
+                <h3>Contact</h3>
+
+                <a href="tel:+441475910316">
+                    01475 910316
+                </a>
+
+                <a class="footer-instagram" href="https://www.instagram.com/dill__flowers?cnvx=MXNrODBnNjFodThnNg==" target="_blank" rel="noopener noreferrer">
+                    <img src="{{ url_for('static', filename='imgs/insta.png') }}" alt="">
+                    Instagram
+                </a>
             </div>
         </div>
         <div class="wrap newsletter" id="newsletter">
